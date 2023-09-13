@@ -265,3 +265,18 @@ class CourseDeleteView(OwnerCourseMixin, DeleteView):
     permission_required = 'courses.delete_course'
 
 
+class SearchSubmitView(View):
+    template = 'search/search_submit.html'
+    response_message = 'Search'
+
+    def post(self, request):
+        template = loader.get_template(self.template)
+        query = request.POST.get('q', '')
+        words = Course.objects.all().order_by('title')
+        items = Course.objects.filter(title__icontains=query, overview__icontains=query)
+        context = {'title': self.response_message, 'query': query, 'items': items, 'words': words}
+        rendered_template = template.render(context, request)
+        return HttpResponse(rendered_template, content_type='text/html')
+
+
+
