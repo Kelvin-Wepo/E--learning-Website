@@ -278,5 +278,8 @@ class SearchSubmitView(View):
         rendered_template = template.render(context, request)
         return HttpResponse(rendered_template, content_type='text/html')
 
+class SearchAjaxSubmitView(SearchSubmitView):
+    template = 'search/search_results.html'
+    response_message = ''
 
 
