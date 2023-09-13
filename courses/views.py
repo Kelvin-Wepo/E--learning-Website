@@ -53,3 +53,17 @@ def edit(request):
         profile_form = ProfileEditForm(instance=request.user.profile)
     return render(request, 'registration/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
+@login_required
+def list_videos(request):
+    subjects = Subject.objects.all()
+    videos = []
+    q  = None
+    max_lengths = [10, 15, 20, 25, 30, 50]
+    results = None
+    if 'q' and 'results' in request.GET:
+        q = request.GET['q'] + ' programming' # mostly tech targeted
+        results = request.GET['results']
+        request.user.profile.get_award_points(5)
+        possibly_award_badge("list_videos", user=request.user)
+        videos =  youtube_search(q, results)
+    return render(request,'videos/list.html', {'videos': videos, 'q': q, 'results': results, 'subjects': subjects, 'max_lengths': max_lengths})
