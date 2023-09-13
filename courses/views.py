@@ -223,3 +223,10 @@ class OwnerEditMixin(object):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(OwnerEditMixin, self).form_valid(form)
+    
+    class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin):
+        model = Course
+    # fields = ['subject', 'title', 'overview',]
+    success_url = reverse_lazy('courses:manage_course_list')
+
+
