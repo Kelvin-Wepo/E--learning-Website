@@ -230,3 +230,38 @@ class OwnerEditMixin(object):
     success_url = reverse_lazy('courses:manage_course_list')
 
 
+class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
+    # fields = ['subject', 'title', 'overview', ]
+    form_class = CourseCreateForm
+    success_url = reverse_lazy('courses:manage_course_list')
+    template_name = 'courses/manage/course/form.html'
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class ManageCourseListView(OwnerCourseMixin, ListView):
+    model = Course
+    template_name = 'courses/manage/course/list.html'
+
+    def get_queryset(self):
+        qs = super(ManageCourseListView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class CourseCreateView(OwnerCourseEditMixin, CreateView):
+    permission_required = 'courses.add_course'
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class CourseUpdateView(OwnerCourseEditMixin, UpdateView):
+    template_name = 'courses/manage/course/form.html'
+    permission_required = 'courses.change_course'
+
+
+@method_decorator([login_required, teacher_required], name='dispatch')
+class CourseDeleteView(OwnerCourseMixin, DeleteView):
+    template_name = 'courses/manage/course/delete.html'
+    success_url = reverse_lazy('courses:manage_course_list')
+    permission_required = 'courses.delete_course'
+
+
