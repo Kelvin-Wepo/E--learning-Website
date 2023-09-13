@@ -219,3 +219,7 @@ class OwnerMixin(object):
         qs = super(OwnerMixin, self).get_queryset()
         return qs.filter(owner=self.request.user)
 
+class OwnerEditMixin(object):
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super(OwnerEditMixin, self).form_valid(form)
