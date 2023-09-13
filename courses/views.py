@@ -212,3 +212,10 @@ class ModuleContentListView(TemplateResponseMixin, View):
         module = get_object_or_404(Module, id=module_id, course__owner=request.user)
 
         return self.render_to_response({'module': module})
+
+
+class OwnerMixin(object):
+    def get_queryset(self):
+        qs = super(OwnerMixin, self).get_queryset()
+        return qs.filter(owner=self.request.user)
+
