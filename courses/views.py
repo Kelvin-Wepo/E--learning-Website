@@ -139,3 +139,11 @@ def add_review(request, subject):
         messages.warning(request, 'Error Occured.')
         return HttpResponseRedirect(reverse('courses:course_detail', args=(subject.slug,)))
     return render(request, 'courses/course/detail.html', {'subject': subject, 'form': form})
+
+class ModuleOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
+
+    def post(self, request):
+        for id, order in self.request_json.items():
+            Module.objects.filter(id=id, course__owner=request.user).update(order=order)
+        return self.render_json_response({'saved': 'OK'})
+
