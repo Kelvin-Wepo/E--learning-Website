@@ -117,3 +117,25 @@ class CourseDetailView(DetailView):
         context['review_form'] = ReviewForm()
         context['reviews'] = Review.objects.order_by('-pub_date')[:9]
         return context
+
+def add_review(request, subject):
+    subject = get_object_or_404(Course, slug=subject)
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        rating = form.cleaned_data['rating']
+        comment = form.cleaned_data['comment']
+        review = Review()
+        review.course = subject
+        review.user_name = request.user
+        review.rating = rating
+        review.comment = comment
+        review.pub_date = datetime.datetime.now()
+        review.save()
+        request.user.profile.get_award_points(15)
+        possibly_award_badge("reviews_course", user=request.user)
+        messages.success(request, 'Review added.')
+        return HttpResponseRedirect(reverse('courses:course_detail', args=(subject.slug,)))
+    else:
+        messages.warning(request, 'Error Occured.')
+        return HttpResponseRedirect(reverse('courses:course_detail', args=(subject.slug,)))
+    return render(request, 'courses/course/detail.html', {'subject': subject, 'form': form})
