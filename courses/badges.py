@@ -1,4 +1,3 @@
-# https://github.com/pinax/pinax-badges/blob/master/pinax/badges/base.py
 import datetime
 from django.utils import timezone
 from courses.models import BadgeAward
