@@ -51,3 +51,12 @@ class ReviewForm(forms.ModelForm):
         }
 
 
+class CourseCreateForm(forms.ModelForm):
+    subject = forms.ModelChoiceField(queryset=Subject.objects.all(),widget=forms.Select(attrs={'class':'form-control'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    overview = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control', 'cols': 40, 'rows': 15}))
+
+    class Meta:
+        model = Course
+        fields = ['subject', 'title', 'overview',]
+
