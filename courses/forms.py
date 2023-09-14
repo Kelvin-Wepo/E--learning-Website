@@ -16,3 +16,13 @@ class ModuleForm(forms.ModelForm):
 ModuleFormSet = inlineformset_factory(Course, Module, form=ModuleForm, fields=['title', 'description',], extra=2, can_delete=True)
 
 
+class UserEditForm(forms.ModelForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'readonly': True}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name',]
+
+    
+
+
