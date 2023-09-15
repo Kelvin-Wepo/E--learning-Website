@@ -52,3 +52,31 @@ class Module(models.Model):
         return '{}. {}'.format(self.order, self.title)
 
 
+class ItemBase(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='%(class)s_related', on_delete=models.CASCADE)
+    title = models.CharField(max_length=250)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    def render(self):
+        return render_to_string('courses/content/{}.html'.format(self._meta.model_name), {'item': self})
+
+    def __str__(self):
+        return self.title
+
+class Text(ItemBase):
+    content = models.TextField()
+
+class File(ItemBase):
+    file = models.FileField(upload_to='files')
+
+class Image(ItemBase):
+    file = models.FileField(upload_to='images')
+
+class Video(ItemBase):
+    url = models.URLField()
+
+
