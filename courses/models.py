@@ -91,3 +91,27 @@ class Content(models.Model):
         ordering = ['order']
 
 
+class Review(models.Model):
+    RATING_CHOICES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5')
+    )
+    course = models.ForeignKey(Course, related_name='reviews', on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    user_name = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewers', on_delete=models.CASCADE)
+    comment = models.CharField(max_length=200)
+    rating = models.IntegerField(choices=RATING_CHOICES)
+
+
+# https://github.com/pinax/pinax-badges
+class BadgeAward(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="badges_earned", on_delete=models.CASCADE)
+    awarded_at = models.DateTimeField(default=timezone.now)
+    slug = models.CharField(max_length=255)
+    level = models.IntegerField()
+
+    def __str__(self):
+        return "{} : {} points - level {}".format(self.user.username, self.user.profile.award_points, self.level)
