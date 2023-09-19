@@ -72,3 +72,19 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    quizzes = models.ManyToManyField(Quiz, through='TakenQuiz')
+    interests = models.ManyToManyField(Tag, related_name='interested_students')
+
+    def get_unanswered_questions(self, quiz):
+        answered_questions = self.quiz_answers \
+            .filter(answer__question__quiz=quiz) \
+            .values_list('answer__question__pk', flat=True)
+        questions = quiz.questions.exclude(pk__in=answered_questions).order_by('text')
+        return questions
+
+    def __str__(self):
+        return '{} - {}'.format(self.user.username, self.user.email)
+
+
