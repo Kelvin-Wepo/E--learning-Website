@@ -23,4 +23,13 @@ class Tag(models.Model):
         html = '<span class="badge badge-primary" style="background-color: %s">%s</span>' % (color, name)
         return mark_safe(html)
 
+class Quiz(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quizzes')
+    name = models.CharField(max_length=255)
+    tags = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='quizzes')
 
+    def __str__(self):
+        return self.name
+
+
+ 
