@@ -49,3 +49,24 @@ class Answer(models.Model):
         return self.text
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    award_points = models.PositiveIntegerField(default=0)
+    location = models.CharField(max_length=30, blank=True)
+    birthdate = models.DateField(null=True, blank=True)
+
+    def get_award_points(self, point):
+        self.award_points += point
+        self.save()
+
+    def __str__(self):
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
+
+
