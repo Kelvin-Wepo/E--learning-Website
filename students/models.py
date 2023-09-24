@@ -84,4 +84,16 @@ class Student(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.user.email)
 
+class TakenQuiz(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='taken_quizzes')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='taken_quizzes')
+    score = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{}. {} {}%'.format(self.quiz, self.student, self.score)
+
+
+
+
 
