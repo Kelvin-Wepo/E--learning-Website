@@ -39,6 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'courses',
     'termsandconditions',
+    'students',
+    'crispy_forms',
+    'embed_video',
+    'rest_framework',
+    'storages',
+    'widget_tweaks',
+    'corsheaders',
+    'taggit',
+    'taggit_serializer',
+    
+
 ]
 
 MIDDLEWARE = [
